@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { PostModule } from './post/post.module';
 
 import appConfig from '@/config/app.config';
 import authConfig from '@/config/auth.config';
@@ -21,13 +22,15 @@ import authConfig from '@/config/auth.config';
       host: 'localhost',
       port: 3306,
       username: 'root',
+      password: 'root',
       database: 'blog_cong_nghe',
-      entities: [],
+      entities: [__dirname + '*/entities/**/*.entity.ts'],
       synchronize: true,
       autoLoadEntities: true,
     }),
     UsersModule,
     AuthModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

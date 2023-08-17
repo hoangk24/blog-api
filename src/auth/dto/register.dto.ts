@@ -8,6 +8,11 @@ export class CreateAuthDto {
   email: string;
 
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  fullName: string;
+
+  @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
