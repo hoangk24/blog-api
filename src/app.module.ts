@@ -22,7 +22,7 @@ import authConfig from '@/config/auth.config';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      database: 'test_database',
+      database: 'blog_cong_nghe',
       entities: [__dirname + '*/entities/**/*.entity.ts'],
       synchronize: true,
       autoLoadEntities: true,
