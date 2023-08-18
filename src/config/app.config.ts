@@ -38,16 +38,7 @@ class EnvironmentVariablesValidator {
   BACKEND_DOMAIN: string;
 
   @IsString()
-  @IsOptional()
-  API_PREFIX: string;
-
-  @IsString()
-  @IsOptional()
-  APP_FALLBACK_LANGUAGE: string;
-
-  @IsString()
-  @IsOptional()
-  APP_HEADER_LANGUAGE: string;
+  DATABASE_URL: string;
 }
 
 export default registerAs<AppConfig>('app', () => {
@@ -64,8 +55,15 @@ export default registerAs<AppConfig>('app', () => {
       : process.env.PORT
       ? parseInt(process.env.PORT, 10)
       : 3000,
-    apiPrefix: process.env.API_PREFIX || 'api',
-    fallbackLanguage: process.env.APP_FALLBACK_LANGUAGE || 'en',
-    headerLanguage: process.env.APP_HEADER_LANGUAGE || 'x-custom-lang',
+    databaseUri: process.env.DATABASE_URL,
   };
 });
+
+// const firebaseConfig = {
+//   apiKey: "AIzaSyDHMAEVTI_YQj8j4BOok5GL5vY48G4KSQo",
+//   authDomain: "taphoa-da0bb.firebaseapp.com",
+//   projectId: "taphoa-da0bb",
+//   storageBucket: "taphoa-da0bb.appspot.com",
+//   messagingSenderId: "840042963851",
+//   appId: "1:840042963851:web:af1d8c1b614482a103858e",
+// };

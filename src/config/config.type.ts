@@ -5,9 +5,7 @@ export type AppConfig = {
   frontendDomain?: string;
   backendDomain: string;
   port: number;
-  apiPrefix: string;
-  fallbackLanguage: string;
-  headerLanguage: string;
+  databaseUri: string;
 };
 
 export type AuthConfig = {
@@ -15,23 +13,6 @@ export type AuthConfig = {
   expires?: string;
   refreshSecret?: string;
   refreshExpires?: string;
-};
-
-export type DatabaseConfig = {
-  url?: string;
-  type?: string;
-  host?: string;
-  port?: number;
-  password?: string;
-  name?: string;
-  username?: string;
-  synchronize?: boolean;
-  maxConnections: number;
-  sslEnabled?: boolean;
-  rejectUnauthorized?: boolean;
-  ca?: string;
-  key?: string;
-  cert?: string;
 };
 
 export type FileConfig = {
@@ -59,7 +40,4 @@ export type MailConfig = {
 export type AllConfigType = {
   app: AppConfig;
   auth: AuthConfig;
-  database: DatabaseConfig;
-  file: FileConfig;
-  mail: MailConfig;
 };
