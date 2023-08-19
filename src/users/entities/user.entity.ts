@@ -15,11 +15,15 @@ export class User {
   fullName: string;
 
   @ApiProperty()
-  @Column()
+  @Column({
+    unique: true,
+  })
   email: string;
 
   @ApiProperty()
-  @Column()
+  @Column({
+    unique: true,
+  })
   username: string;
 
   @Column()
@@ -34,6 +38,9 @@ export class User {
     default: false,
   })
   isAdmin: boolean;
+
+  @OneToMany(() => Post, (post) => post.usersFavored)
+  favoredPost: Post[];
 
   @OneToMany(() => Post, (post) => post.author)
   posts: Post[];

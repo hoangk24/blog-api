@@ -1,10 +1,11 @@
+import { UsersService } from '@/users/users.service';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
+import { Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
-import { Repository } from 'typeorm';
-import { UsersService } from '@/users/users.service';
 
 @Injectable()
 export class PostService {
@@ -13,6 +14,10 @@ export class PostService {
     private postRepository: Repository<Post>,
     private userService: UsersService,
   ) {}
+
+  async getPosts(params: IPaginationOptions) {
+    return paginate(this.postRepository, params);
+  }
 
   async create(createPostDto: CreatePostDto, userId: number) {
     const author = await this.userService.findOne({

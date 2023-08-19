@@ -11,11 +11,11 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(8)
+  @MinLength(4)
   username: string;
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(8)
+  @MinLength(4)
   password: string;
 }

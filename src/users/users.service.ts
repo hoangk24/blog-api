@@ -1,11 +1,11 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { ValidationError } from '@/errors/ValidationError';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { hash } from 'bcrypt';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { hash } from 'bcrypt';
-import httpStatus from 'http-status';
 
 @Injectable()
 export class UsersService {
@@ -15,12 +15,22 @@ export class UsersService {
   ) {}
 
   async create({ password, ...rest }: CreateUserDto) {
-    const userExits = await this.usersRepository.findOneBy({
-      username: rest.username,
-    });
+    const { email, username } = rest;
+
+    const userExits = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.username = :username', { username })
+      .orWhere('user.email = :email', { email })
+      .getOne();
 
     if (userExits) {
-      throw new HttpException('username exited.', httpStatus.CONFLICT);
+      if (userExits.username === username) {
+        throw new ValidationError('username', 'Username has been used.');
+      }
+
+      if (userExits.email === email) {
+        throw new ValidationError('email', 'Email has been used.');
+      }
     }
 
     return this.usersRepository.save({

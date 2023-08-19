@@ -15,12 +15,12 @@ export class CreateAuthDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  @MinLength(8)
+  @MinLength(4)
   username: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  @MinLength(8)
+  @MinLength(4)
   password: string;
 }
