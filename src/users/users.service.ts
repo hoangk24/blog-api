@@ -6,6 +6,7 @@ import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { UserRole } from '@/model/user';
 
 @Injectable()
 export class UsersService {
@@ -35,6 +36,7 @@ export class UsersService {
 
     return this.usersRepository.save({
       ...rest,
+      roles: [UserRole.USER],
       password: await hash(password, 10),
     });
   }

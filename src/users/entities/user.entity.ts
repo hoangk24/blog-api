@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { compare } from 'bcrypt';
 import { omit } from 'lodash';
-import { UserWithoutPrivateFields } from '@/model/user';
+import { UserRole, UserWithoutPrivateFields } from '@/model/user';
 import { Post } from '@/post/entities/post.entity';
 
 @Entity()
@@ -35,9 +35,11 @@ export class User {
   isActive: boolean;
 
   @Column({
-    default: false,
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
   })
-  isAdmin: boolean;
+  role: UserRole;
 
   @OneToMany(() => Post, (post) => post.usersFavored)
   favoredPost: Post[];

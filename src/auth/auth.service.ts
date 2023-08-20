@@ -1,4 +1,4 @@
-import { UserWithoutPrivateFields } from '@/model/user';
+import { UserRole, UserWithoutPrivateFields } from '@/model/user';
 import { User } from '@/users/entities/user.entity';
 import { UsersService } from '@/users/users.service';
 import {
@@ -8,6 +8,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { LoginDto } from './dto/login.dto';
 import { CreateAuthDto } from './dto/register.dto';
 
 @Injectable()
@@ -16,6 +17,28 @@ export class AuthService {
     private jwtService: JwtService,
     private userService: UsersService,
   ) {}
+
+  async login({ password, username }: LoginDto) {
+    const user = await this.validateUserCredentials(username, password);
+
+    if (user.role !== UserRole.ADMIN) {
+      throw new ForbiddenException('You do not have permission.');
+    }
+
+    return {
+      user,
+      accessToken: await this.generateJsonWebToken(user),
+    };
+  }
+
+  async loginAdmin({ password, username }: LoginDto) {
+    const user = await this.validateUserCredentials(username, password);
+
+    return {
+      user,
+      accessToken: await this.generateJsonWebToken(user),
+    };
+  }
 
   async getMe(id: number): Promise<UserWithoutPrivateFields> {
     const user = await this.userService.findOne({
