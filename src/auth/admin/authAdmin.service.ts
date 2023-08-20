@@ -4,27 +4,17 @@ import { UsersService } from '@/users/users.service';
 import {
   ForbiddenException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDto } from './dto/login.dto';
-import { CreateAuthDto } from './dto/register.dto';
+import { LoginDto } from '@/auth/dto/login.dto';
 
 @Injectable()
-export class AuthService {
+export class AuthAdminService {
   constructor(
     private jwtService: JwtService,
     private userService: UsersService,
   ) {}
-
-  async login({ password, username }: LoginDto) {
-    const user = await this.validateUserCredentials(username, password);
-    return {
-      user,
-      accessToken: await this.generateJsonWebToken(user),
-    };
-  }
 
   async loginAdmin({ password, username }: LoginDto) {
     const user = await this.validateUserCredentials(username, password);
@@ -36,34 +26,6 @@ export class AuthService {
     return {
       user,
       accessToken: await this.generateJsonWebToken(user),
-    };
-  }
-
-  async getMe(id: number): Promise<UserWithoutPrivateFields> {
-    const user = await this.userService.findOne({
-      where: {
-        id,
-      },
-    });
-    if (!user) {
-      throw new NotFoundException('User not exits.');
-    }
-
-    return User.removePrivateField(user);
-  }
-
-  async create(createUser: CreateAuthDto): Promise<{
-    user: UserWithoutPrivateFields;
-    accessToken: string;
-  }> {
-    const user = await this.userService.create(createUser);
-
-    return {
-      user,
-      accessToken: await this.jwtService.signAsync({
-        sub: user.id,
-        username: user.username,
-      }),
     };
   }
 

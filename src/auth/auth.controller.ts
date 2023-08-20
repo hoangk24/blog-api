@@ -7,7 +7,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { CreateAuthDto } from './dto/register.dto';
@@ -19,21 +19,13 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
-  @ApiBody({ type: LoginDto })
-  login(@Request() req: RequestWithUser) {
-    return {
-      user: req.user,
-      accessToken: this.authService.generateJsonWebToken(req.user),
-    };
+  login(@Body() payload: LoginDto) {
+    return this.authService.login(payload);
   }
 
   @Post('/admin/login')
-  @ApiBody({ type: LoginDto })
-  loginAdmin(@Request() req: RequestWithUser) {
-    return {
-      user: req.user,
-      accessToken: this.authService.generateJsonWebToken(req.user),
-    };
+  loginAdmin(@Body() payload: LoginDto) {
+    return this.authService.loginAdmin(payload);
   }
 
   @Post('/register')
