@@ -15,7 +15,7 @@ import authConfig from '@/config/auth.config';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, authConfig],
-      envFilePath: ['.env.development', '.env.production'],
+      envFilePath: ['.env.production'],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
