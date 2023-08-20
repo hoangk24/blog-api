@@ -1,3 +1,4 @@
+import { BaseEntity } from '@/core/base.entity';
 import { User } from '@/users/entities/user.entity';
 import {
   Column,
@@ -5,15 +6,11 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Post {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Post extends BaseEntity {
   @Column({ nullable: true })
   poster?: string;
 
@@ -36,9 +33,6 @@ export class Post {
   @OneToMany(() => User, (user) => user.favoredPost)
   usersFavored: User[];
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @Column({ default: false })
+  isApproved: boolean;
 }

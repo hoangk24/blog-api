@@ -1,4 +1,4 @@
-import { UserRole, UserWithoutPrivateFields } from '@/model/user';
+import { UserWithoutPrivateFields } from '@/model/user';
 import { User } from '@/users/entities/user.entity';
 import { UsersService } from '@/users/users.service';
 import {
@@ -20,22 +20,10 @@ export class AuthService {
 
   async login({ password, username }: LoginDto) {
     const user = await this.validateUserCredentials(username, password);
+    const accessToken = await this.generateJsonWebToken(user);
     return {
       user,
-      accessToken: await this.generateJsonWebToken(user),
-    };
-  }
-
-  async loginAdmin({ password, username }: LoginDto) {
-    const user = await this.validateUserCredentials(username, password);
-    console.log(user);
-
-    if (user.role !== UserRole.ADMIN) {
-      throw new ForbiddenException('You do not have permission.');
-    }
-    return {
-      user,
-      accessToken: await this.generateJsonWebToken(user),
+      accessToken,
     };
   }
 

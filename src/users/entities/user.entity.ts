@@ -1,15 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { compare } from 'bcrypt';
-import { omit } from 'lodash';
+import { BaseEntity } from '@/core/base.entity';
 import { UserRole, UserWithoutPrivateFields } from '@/model/user';
 import { Post } from '@/post/entities/post.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { compare } from 'bcrypt';
+import { omit } from 'lodash';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class User extends BaseEntity {
   @ApiProperty()
   @Column()
   fullName: string;
