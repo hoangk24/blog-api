@@ -6,22 +6,57 @@ import { hash } from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { FindOneOptions, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService extends BaseService<User> {
-  constructor(@InjectRepository(User) repo) {
+  constructor(@InjectRepository(User) repo: Repository<User>) {
     super(repo);
   }
 
-  async getProfile(id: number, userId?: number) {
-    const profile = await this.repo
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.friendRequests', 'friendRequests')
-      .where('user.id = :id', { id })
+  //!-----------Start Core-----------
 
+  async findOne(options: FindOneOptions<User>) {
+    return this.repo.findOne({
+      ...options,
+      relations: ['friendRequests', 'friends'],
+    });
+  }
+
+  async create({ password, ...rest }: CreateUserDto) {
+    const { email, username } = rest;
+    const userExits = await this.repo
+      .createQueryBuilder('user')
+      .where('user.username = :username', { username })
+      .orWhere('user.email = :email', { email })
       .getOne();
 
-    console.log(profile);
+    if (userExits) {
+      if (userExits.username === username) {
+        this.throwErrorFieldException('username', 'Username has been used.');
+      }
+
+      if (userExits.email === email) {
+        this.throwErrorFieldException('email', 'Email has been used.');
+      }
+    }
+
+    return this.repo.save({
+      ...rest,
+      role: UserRole.USER,
+      password: await hash(password, 10),
+    });
+  }
+  //!-----------End core-----------
+
+  //! -----------Start Feature-----------
+
+  async getProfile(friendId: number, userId?: number) {
+    const profile = await this.findOne({
+      where: {
+        id: friendId,
+      },
+    });
 
     if (!profile) {
       this.throwNotFoundException('user not found');
@@ -29,15 +64,14 @@ export class UsersService extends BaseService<User> {
 
     let status: string;
     if (userId) {
-      const user = await this.repo.findOne({
+      const user = await this.findOne({
         where: {
           id: userId,
         },
-        relations: ['friends'],
       });
 
-      if (user.friends.some((friend) => friend.id === id)) {
-        status = 'yourFriend'; // Bạn bè
+      if (user.friends.some((friend) => friend.id === friendId)) {
+        status = 'yourFriend';
       } else if (
         profile.friendRequests.some((request) => request.id === userId)
       ) {
@@ -54,12 +88,12 @@ export class UsersService extends BaseService<User> {
   }
 
   async getMyFriends(userId: number) {
-    const user = await this.repo.findOne({
+    const user = await this.findOne({
       where: {
         id: userId,
       },
-      relations: ['friends'],
     });
+
     return user.friends;
   }
 
@@ -81,57 +115,54 @@ export class UsersService extends BaseService<User> {
       this.throwNotFoundException('Not found your friend.');
     }
 
-    const me = await this.repo.findOne({
+    const me = await this.findOne({
       where: {
         id: userId,
       },
-      relations: ['friends', 'friendRequests'],
     });
+
     me.friends.filter((item) => item.id === friendId);
 
     return this.repo.save(me);
   }
 
   async cancelAddFriend(userId: number, friendId: number) {
-    const friend = await this.repo.findOne({
+    const friend = await this.findOne({
       where: {
         id: friendId,
       },
-      relations: ['friends', 'friendRequests'],
     });
 
     if (!friend) {
       this.throwNotFoundException('Not found your friend.');
     }
 
-    const me = await this.repo.findOne({
+    const me = await this.findOne({
       where: {
         id: userId,
       },
-      relations: ['friends', 'friendRequests'],
     });
+
     me.friendRequests.filter((item) => item.id === friendId);
 
     return this.repo.save(me);
   }
 
   async addFriend(userId: number, friendId: number) {
-    const friend = await this.repo.findOne({
+    const friend = await this.findOne({
       where: {
         id: friendId,
       },
-      relations: ['friends', 'friendRequests'],
     });
 
     if (!friend) {
       this.throwNotFoundException('Not found your friend.');
     }
 
-    const me = await this.repo.findOne({
+    const me = await this.findOne({
       where: {
         id: userId,
       },
-      relations: ['friends', 'friendRequests'],
     });
 
     me.friendRequests.push(friend);
@@ -140,22 +171,20 @@ export class UsersService extends BaseService<User> {
   }
 
   async acceptFriend(userId: number, friendId: number) {
-    const friend = await this.repo.findOne({
+    const friend = await this.findOne({
       where: {
         id: friendId,
       },
-      relations: ['friends', 'friendRequests'],
     });
 
     if (!friend) {
       this.throwNotFoundException('Not found your friend.');
     }
 
-    const me = await this.repo.findOne({
+    const me = await this.findOne({
       where: {
         id: userId,
       },
-      relations: ['friends', 'friendRequests'],
     });
 
     me.friends.push(friend);
@@ -164,29 +193,5 @@ export class UsersService extends BaseService<User> {
     return this.repo.save(me);
   }
 
-  async create({ password, ...rest }: CreateUserDto) {
-    const { email, username } = rest;
-
-    const userExits = await this.repo
-      .createQueryBuilder('user')
-      .where('user.username = :username', { username })
-      .orWhere('user.email = :email', { email })
-      .getOne();
-
-    if (userExits) {
-      if (userExits.username === username) {
-        this.throwErrorFieldException('username', 'Username has been used.');
-      }
-
-      if (userExits.email === email) {
-        this.throwErrorFieldException('email', 'Email has been used.');
-      }
-    }
-
-    return this.repo.save({
-      ...rest,
-      roles: [UserRole.USER],
-      password: await hash(password, 10),
-    });
-  }
+  //!-----------End Feature-----------
 }

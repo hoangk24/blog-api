@@ -2,15 +2,12 @@ import { ValidationError } from '@/core/error';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 export abstract class CoreService {
-  throwBadRequestException(msg?: unknown): BadRequestException {
-    throw new BadRequestException(msg);
-  }
+  abstract throwBadRequestException(msg?: unknown): BadRequestException;
 
-  throwNotFoundException(name: string): NotFoundException {
-    throw new NotFoundException(`${name} not found`);
-  }
+  abstract throwNotFoundException(name: string): NotFoundException;
 
-  throwErrorFieldException(field: string, msg: string): ValidationError {
-    throw new ValidationError(field, msg);
-  }
+  abstract throwErrorFieldException(
+    field: string,
+    msg: string,
+  ): ValidationError;
 }

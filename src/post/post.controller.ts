@@ -42,12 +42,12 @@ export class PostController {
 
   @Get(':id')
   getPostDetail(@Param(':id') id: number) {
-    return this.postService.findOne({
-      where: {
-        id,
-      },
-      relations: ['author'],
-    });
+    // return this.postService.findOne({
+    //   where: {
+    //     id,
+    //   },
+    //   relations: ['author'],
+    // });
   }
 
   @Get()
