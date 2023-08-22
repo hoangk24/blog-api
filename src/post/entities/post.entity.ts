@@ -1,18 +1,11 @@
 import { BaseEntity } from '@/core/base.entity';
-import { User } from '@/users/entities/user.entity';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  UpdateDateColumn,
-} from 'typeorm';
+import { User } from '@/user/entities/user.entity';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity()
 export class Post extends BaseEntity {
   @Column({ nullable: true })
-  poster?: string;
+  posterId?: number;
 
   @Column()
   title: string;

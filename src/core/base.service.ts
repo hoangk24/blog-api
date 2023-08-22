@@ -15,7 +15,6 @@ export class BaseService<T> extends CoreService {
   }
 
   async findOne(options: FindOneOptions<T>): Promise<T> {
-    paginate;
     return await this.repo.findOne(options);
   }
 

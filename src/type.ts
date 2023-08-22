@@ -4,6 +4,7 @@ export type RequestWithUser = Request & {
   user: UserWithoutPrivateFields;
 };
 
-export type RequestWithOptionUser = Request & {
-  user?: UserWithoutPrivateFields;
-};
+export type RequestWithOptionUser = Request &
+  Partial<{
+    user?: UserWithoutPrivateFields;
+  }>;

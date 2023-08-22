@@ -1,6 +1,6 @@
 import { UserRole, UserWithoutPrivateFields } from '@/model/user';
-import { User } from '@/users/entities/user.entity';
-import { UsersService } from '@/users/users.service';
+import { User } from '@/user/entities/user.entity';
+import { UsersService } from '@/user/users.service';
 import {
   ForbiddenException,
   Injectable,

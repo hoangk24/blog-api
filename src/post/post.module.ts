@@ -1,4 +1,4 @@
-import { UsersModule } from '@/users/users.module';
+import { UsersModule } from '@/user/users.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
@@ -6,9 +6,10 @@ import { PostController } from './post.controller';
 import { PostService } from './post.service';
 import { PostAdminController } from './admin/postAdmin.controller';
 import { PostAdminService } from './admin/postAdmin.service';
+import { FileModule } from '@/file/file.module';
 
 @Module({
-  imports: [UsersModule, TypeOrmModule.forFeature([Post])],
+  imports: [FileModule, UsersModule, TypeOrmModule.forFeature([Post])],
   controllers: [PostController, PostAdminController],
   providers: [PostService, PostAdminService],
 })

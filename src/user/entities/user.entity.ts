@@ -4,7 +4,7 @@ import { Post } from '@/post/entities/post.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { compare } from 'bcrypt';
 import { omit } from 'lodash';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
@@ -32,6 +32,18 @@ export class User extends BaseEntity {
   })
   isActive: boolean;
 
+  @Column({ nullable: true })
+  banner?: string;
+
+  @Column({ nullable: true })
+  avatar?: string;
+
+  @Column({ nullable: true })
+  description?: string;
+
+  @Column({ nullable: true })
+  address?: string;
+
   @Column({
     type: 'enum',
     enum: UserRole,
@@ -44,6 +56,18 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Post, (post) => post.author)
   posts: Post[];
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  friends: User[];
+
+  @ManyToMany(() => User, { cascade: true })
+  @JoinTable({
+    name: 'friendship',
+    joinColumn: { name: 'friendId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
+  })
+  friendRequests: User[];
 
   static removePrivateField(user: User): UserWithoutPrivateFields {
     return omit(user, 'password', 'isActive');

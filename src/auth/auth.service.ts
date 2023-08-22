@@ -1,10 +1,9 @@
 import { UserWithoutPrivateFields } from '@/model/user';
-import { User } from '@/users/entities/user.entity';
-import { UsersService } from '@/users/users.service';
+import { User } from '@/user/entities/user.entity';
+import { UsersService } from '@/user/users.service';
 import {
   ForbiddenException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -25,19 +24,6 @@ export class AuthService {
       user,
       accessToken,
     };
-  }
-
-  async getMe(id: number): Promise<UserWithoutPrivateFields> {
-    const user = await this.userService.findOne({
-      where: {
-        id,
-      },
-    });
-    if (!user) {
-      throw new NotFoundException('User not exits.');
-    }
-
-    return User.removePrivateField(user);
   }
 
   async create(createUser: CreateAuthDto): Promise<{
