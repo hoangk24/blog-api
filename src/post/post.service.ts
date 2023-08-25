@@ -1,11 +1,12 @@
 import { BaseService } from '@/core/base.service';
 import { FileService } from '@/file/file.service';
-import { UserWithoutPrivateFields } from '@/model/user';
+import { User } from '@/user/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './entities/post.entity';
 
 @Injectable()
@@ -13,35 +14,13 @@ export class PostService extends BaseService<Post> {
   constructor(
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
-    private fileService: FileService,
+    private fileService: FileService, // private dataSource: DataSource,
   ) {
     super(postRepository);
   }
 
-  async createPost(
-    payload: CreatePostDto,
-    author: UserWithoutPrivateFields,
-    poster?: Express.Multer.File,
-  ) {
-    return await this.postRepository.save({
-      ...payload,
-      author,
-      posterId: poster ? await this.fileService.upload(poster) : null,
-    });
-  }
-
   async getAllWithPaginate(params: IPaginationOptions) {
     const query = this.postRepository.createQueryBuilder();
-    // .where('isApproved = :isApproved', { isApproved: true });
-    return paginate(query, params);
-  }
-
-  async getMyPost(userId: number, params: IPaginationOptions) {
-    const query = this.postRepository
-      .createQueryBuilder('post')
-      .leftJoinAndSelect('post.author', 'author')
-      .where('author.id = :userId', { userId });
-
     return paginate(query, params);
   }
 
@@ -63,4 +42,59 @@ export class PostService extends BaseService<Post> {
       relations: ['author'],
     });
   }
+
+  //!START ADMIN
+  async create(
+    payload: CreatePostDto,
+    author: User,
+    file?: Express.Multer.File,
+  ) {
+    const post = new Post();
+    post.content = payload.content;
+    post.title = payload.title;
+    post.author = author;
+
+    if (file) {
+      const photoId = await this.fileService.upload(file);
+      post.posterId = photoId;
+    }
+
+    this.postRepository.save(post);
+  }
+  // async create(
+  //   { content, title }: CreatePostDto,
+  //   author: User,
+  //   file?: Express.Multer.File,
+  // ) {
+  //   const runQuery = createTransaction(this.dataSource);
+  //   return runQuery(async (queryRunner) => {
+  //     const post = new Post();
+  //     post.content = content;
+  //     post.title = title;
+  //     post.author = author;
+  //     if (file) {
+  //       const photoId = await this.fileService.upload(file);
+  //       post.posterId = photoId;
+  //     }
+
+  //     const slide = await queryRunner.manager.save(
+  //       this.postRepository.save(post),
+  //     );
+  //     return slide;
+  //   });
+  // }
+
+  async getMany(params: IPaginationOptions) {
+    const query = this.repo.createQueryBuilder();
+    return paginate(query, params);
+  }
+
+  async delete(id: number) {
+    return this.repo.softDelete({ id });
+  }
+
+  async update(id: number, payload: UpdatePostDto) {
+    return this.repo.update({ id }, payload);
+  }
+  //!END ADMIN
 }
