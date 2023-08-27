@@ -7,7 +7,7 @@ export class Post extends BaseEntity {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   posterId: number;
 
   @Column({

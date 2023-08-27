@@ -2,16 +2,23 @@ import { ApplyUser, RoleChecker } from '@/auth/auth.decorator';
 import { UserRole } from '@/model/user';
 import { RequestWithUser } from '@/type';
 import {
+  Body,
   Controller,
   DefaultValuePipe,
   Get,
   Param,
   ParseIntPipe,
+  Post,
   Query,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PostService } from './post.service';
+import { storage } from '@/config/storage.config';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 export class PostController {
@@ -37,5 +44,16 @@ export class PostController {
       page,
       limit,
     });
+  }
+
+  @Post()
+  @UseInterceptors(FileInterceptor('file', { storage }))
+  @ApplyUser()
+  async createPost(
+    @UploadedFile() file: Express.Multer.File,
+    @Request() req: RequestWithUser,
+    @Body() payload: CreatePostDto,
+  ) {
+    return this.postService.create(payload, req.user, file);
   }
 }

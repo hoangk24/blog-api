@@ -52,7 +52,7 @@ export class PostService extends BaseService<Post> {
     const post = new Post();
     post.content = payload.content;
     post.title = payload.title;
-    post.author = author;
+    // post.author = author;
 
     if (file) {
       const photoId = await this.fileService.upload(file);
