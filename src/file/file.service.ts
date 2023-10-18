@@ -21,6 +21,7 @@ export class FileService extends BaseService<File> {
     newFile.name = file.originalname;
     newFile.size = file.size;
     newFile.url = url;
+
     const result = await this.repo.save(newFile);
 
     return result.id;
