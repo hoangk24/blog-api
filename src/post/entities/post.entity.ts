@@ -1,6 +1,6 @@
 import { BaseEntity } from '@/core/base.entity';
 import { User } from '@/user/entities/user.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Post extends BaseEntity {
@@ -18,6 +18,6 @@ export class Post extends BaseEntity {
   @ManyToOne(() => User, (user) => user.posts)
   author: User;
 
-  // @DeleteDateColumn({ nullable: true })
-  // deletedAt?: Date;
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date;
 }

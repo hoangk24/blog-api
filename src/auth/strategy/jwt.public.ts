@@ -1,4 +1,4 @@
-import { UsersService } from '@/user/users.service';
+import { UsersService } from '@/user/user.service';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';

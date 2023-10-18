@@ -3,10 +3,9 @@ import { UserRole } from '@/model/user';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
 import { FindOneOptions, Repository } from 'typeorm';
+import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService extends BaseService<User> {
@@ -20,8 +19,8 @@ export class UsersService extends BaseService<User> {
     return this.repo.findOne(options);
   }
 
-  async create({ password, ...rest }: CreateUserDto) {
-    const { email, username } = rest;
+  async create(payload: CreateUserDto) {
+    const { email, username } = payload;
     const userExits = await this.repo
       .createQueryBuilder('user')
       .where('user.username = :username', { username })
@@ -39,9 +38,8 @@ export class UsersService extends BaseService<User> {
     }
 
     return this.repo.save({
-      ...rest,
+      ...payload,
       role: UserRole.USER,
-      password: await hash(password, 10),
     });
   }
   //!-----------End core-----------

@@ -1,4 +1,4 @@
-import { UsersModule } from '@/user/users.module';
+import { UsersModule } from '@/user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -17,7 +17,7 @@ import authConfig from '@/config/auth.config';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, authConfig],
-      envFilePath: ['.env.development', '.env.production'],
+      envFilePath: ['.env.development'],
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),

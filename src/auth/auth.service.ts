@@ -1,6 +1,6 @@
 import { UserWithoutPrivateFields } from '@/model/user';
 import { User } from '@/user/entities/user.entity';
-import { UsersService } from '@/user/users.service';
+import { UsersService } from '@/user/user.service';
 import {
   ForbiddenException,
   Injectable,
