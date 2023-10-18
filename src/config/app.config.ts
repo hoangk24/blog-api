@@ -19,24 +19,25 @@ enum Environment {
 }
 
 class EnvironmentVariablesValidator {
-  @IsEnum(Environment)
   @IsOptional()
+  @IsEnum(Environment)
   NODE_ENV: Environment;
 
+  @IsOptional()
   @IsInt()
   @Min(0)
   @Max(65535)
-  @IsOptional()
   APP_PORT: number;
 
-  @IsUrl({ require_tld: false })
   @IsOptional()
+  @IsUrl({ require_tld: false })
   FRONTEND_DOMAIN: string;
 
-  @IsUrl({ require_tld: false })
   @IsOptional()
+  @IsUrl({ require_tld: false })
   BACKEND_DOMAIN: string;
 
+  @IsOptional()
   @IsString()
   DATABASE_URL: string;
 }

@@ -17,7 +17,7 @@ import authConfig from '@/config/auth.config';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, authConfig],
-      envFilePath: ['.env.development'],
+      envFilePath: ['.env'],
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
