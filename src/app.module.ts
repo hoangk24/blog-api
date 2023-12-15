@@ -34,7 +34,6 @@ import authConfig from '@/config/auth.config';
           autoLoadEntities: true,
         };
       },
-
       inject: [ConfigService],
     }),
     UsersModule,

@@ -59,12 +59,3 @@ export default registerAs<AppConfig>('app', () => {
     databaseUri: process.env.DATABASE_URL,
   };
 });
-
-// const firebaseConfig = {
-//   apiKey: "AIzaSyDHMAEVTI_YQj8j4BOok5GL5vY48G4KSQo",
-//   authDomain: "taphoa-da0bb.firebaseapp.com",
-//   projectId: "taphoa-da0bb",
-//   storageBucket: "taphoa-da0bb.appspot.com",
-//   messagingSenderId: "840042963851",
-//   appId: "1:840042963851:web:af1d8c1b614482a103858e",
-// };

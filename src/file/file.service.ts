@@ -15,9 +15,14 @@ export class FileService extends BaseService<File> {
     super(repo);
   }
 
+  async get(id: number) {
+    return this.repo.findOneBy({ id });
+  }
+
   async upload(file: Express.Multer.File) {
     const url = await this.storage.upload(file);
     const newFile = new File();
+
     newFile.name = file.originalname;
     newFile.size = file.size;
     newFile.url = url;

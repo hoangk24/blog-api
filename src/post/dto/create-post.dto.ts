@@ -7,9 +7,11 @@ export class CreatePostDto {
 
   @IsOptional()
   @IsString()
-  poster?: string;
+  content: string;
+
+  @IsNotEmpty()
+  slug: string;
 
   @IsOptional()
-  @IsString()
-  content: string;
+  posterId?: number;
 }
