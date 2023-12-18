@@ -1,16 +1,12 @@
 import {
-  Body,
   Controller,
   DefaultValuePipe,
   Get,
   Param,
   ParseIntPipe,
-  Post,
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CreatePostDto } from './dto/create-post.dto';
-import { CreateTagDto } from './dto/create-tag.dto';
 import { PostService } from './post.service';
 
 @ApiTags('post')
@@ -20,7 +16,7 @@ export class PostController {
 
   @Get(':id')
   getPostDetail(@Param(':id') id: number) {
-    // return this.postService.getPost(id);
+    return this.postService.getPost(id);
   }
 
   @Get()
@@ -32,15 +28,5 @@ export class PostController {
       page,
       limit,
     });
-  }
-
-  @Post()
-  async createPost(@Body() payload: CreatePostDto) {
-    return this.postService.create(payload);
-  }
-
-  @Post('tag')
-  async createTag(@Body() payload: CreateTagDto) {
-    return this.postService.createTag(payload);
   }
 }

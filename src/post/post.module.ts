@@ -6,11 +6,12 @@ import { PostController } from './post.controller';
 import { PostService } from './post.service';
 import { FileModule } from '@/file/file.module';
 import { Tag } from './entities/tag.entity';
-import { FileService } from '@/file/file.service';
+import { PostAdminController } from './postAdmin.controller';
+import { PostAdminService } from './postAdmin.service';
 
 @Module({
-  imports: [UsersModule, TypeOrmModule.forFeature([Post, Tag])],
-  controllers: [PostController],
-  providers: [PostService],
+  imports: [TypeOrmModule.forFeature([Post, Tag]), FileModule],
+  controllers: [PostController, PostAdminController],
+  providers: [PostService, PostAdminService],
 })
 export class PostModule {}

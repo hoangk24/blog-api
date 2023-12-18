@@ -27,32 +27,35 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
+  @ApiProperty()
   @Column({
     default: true,
   })
   isActive: boolean;
 
+  @ApiProperty()
   @Column({ nullable: true })
   banner?: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   avatar?: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   description?: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   address?: string;
 
+  @ApiProperty()
   @Column({
     type: 'enum',
     enum: UserRole,
     default: UserRole.USER,
   })
   role: UserRole;
-
-  // @OneToMany(() => Post, (post) => post.author)
-  // posts: Post[];
 
   static removePrivateField(user: User): UserWithoutPrivateFields {
     return omit(user, 'password', 'isActive');
