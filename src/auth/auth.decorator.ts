@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuardPrivate, JwtAuthGuardPublic } from './guard/jwt.guard';
 
+// TODO:
+
 export const RoleChecker = (role: UserRole): Type<CanActivate> => {
   @UseGuards(JwtAuthGuardPrivate)
   class RoleGuardMixin {

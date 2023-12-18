@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsFile, MemoryStoredFile } from 'nestjs-form-data';
 
 export class CreatePostDto {
   @ApiProperty()
@@ -19,4 +20,8 @@ export class CreatePostDto {
   @ApiProperty()
   @IsOptional()
   posterId?: number;
+
+  // @ApiProperty()
+  // @IsFile()
+  // poster: MemoryStoredFile;
 }

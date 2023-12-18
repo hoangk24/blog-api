@@ -17,8 +17,8 @@ export class AuthService {
     private userService: UsersService,
   ) {}
 
-  async login({ password, username }: LoginDto) {
-    const user = await this.validateUserCredentials(username, password);
+  async login(payload: LoginDto) {
+    const user = await this.validateUserCredentials(payload);
     const accessToken = await this.generateJsonWebToken(user);
     return {
       user,
@@ -41,15 +41,17 @@ export class AuthService {
     };
   }
 
-  async validateUserCredentials(
-    username: string,
-    password: string,
-  ): Promise<UserWithoutPrivateFields> {
-    const user = await this.userService.findOne({
-      where: {
-        username,
-      },
-    });
+  async validateUserCredentials({
+    username,
+    password,
+    email,
+  }: LoginDto): Promise<UserWithoutPrivateFields> {
+    const user = await this.userService
+      .queryBuilder()
+      .where('user.username = :username', { username })
+      .orWhere('user.email = :email', { email })
+      .getOne();
+
     if (!user) {
       throw new UnauthorizedException('User not exits.');
     }

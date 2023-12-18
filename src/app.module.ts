@@ -11,6 +11,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import appConfig from '@/config/app.config';
 import authConfig from '@/config/auth.config';
+import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import authConfig from '@/config/auth.config';
     AuthModule,
     PostModule,
     FileModule,
+    NestjsFormDataModule.config({ storage: MemoryStoredFile }),
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -7,6 +7,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { Post } from './entities/post.entity';
 import { Tag } from './entities/tag.entity';
+import { ErrorHandler } from '@/core/error.service';
 
 @Injectable()
 export class PostAdminService {
@@ -30,7 +31,7 @@ export class PostAdminService {
     if (payload.posterId) {
       const poster = await this.fileService.get(payload.posterId);
       if (!poster) {
-        this.fileService.throwNotFoundException('poster not found');
+        ErrorHandler.throwNotFoundException('poster not found');
       }
     }
     return this.postRepository.save(payload);

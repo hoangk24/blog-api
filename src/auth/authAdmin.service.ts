@@ -1,3 +1,4 @@
+import { LoginDto } from '@/auth/dto/login.dto';
 import { UserRole, UserWithoutPrivateFields } from '@/model/user';
 import { User } from '@/user/entities/user.entity';
 import { UsersService } from '@/user/user.service';
@@ -7,7 +8,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDto } from '@/auth/dto/login.dto';
 
 @Injectable()
 export class AuthAdminService {
@@ -16,28 +16,32 @@ export class AuthAdminService {
     private userService: UsersService,
   ) {}
 
-  async loginAdmin({ password, username }: LoginDto) {
-    const user = await this.validateUserCredentials(username, password);
-    console.log(user);
+  async loginAdmin(payload: LoginDto) {
+    const user = await this.validateUserCredentials(payload);
 
     if (user.role !== UserRole.ADMIN) {
       throw new ForbiddenException('You do not have permission.');
     }
+
+    const token = await this.generateJsonWebToken(user);
+
     return {
       user,
-      accessToken: await this.generateJsonWebToken(user),
+      accessToken: token,
     };
   }
 
-  async validateUserCredentials(
-    username: string,
-    password: string,
-  ): Promise<UserWithoutPrivateFields> {
-    const user = await this.userService.findOne({
-      where: {
-        username,
-      },
-    });
+  async validateUserCredentials({
+    password,
+    email,
+    username,
+  }: LoginDto): Promise<UserWithoutPrivateFields> {
+    const user = await this.userService
+      .queryBuilder()
+      .where('user.username = :username', { username })
+      .orWhere('user.email = :email', { email })
+      .getOne();
+
     if (!user) {
       throw new UnauthorizedException('User not exits.');
     }

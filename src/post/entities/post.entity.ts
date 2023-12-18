@@ -11,7 +11,7 @@ export class Post extends BaseEntity {
 
   @ApiProperty()
   @Column({ nullable: true })
-  posterId: number;
+  poster: number;
 
   @ApiProperty()
   @Column({

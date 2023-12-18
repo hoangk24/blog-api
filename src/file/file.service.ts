@@ -1,4 +1,3 @@
-import { BaseService } from '@/core/base.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,17 +5,17 @@ import { File } from './entities/File.entity';
 import { StorageStrategy } from './file.type';
 
 @Injectable()
-export class FileService extends BaseService<File> {
+export class FileService {
   constructor(
     @Inject('StorageStrategy')
     private readonly storage: StorageStrategy,
-    @InjectRepository(File) repo: Repository<File>,
-  ) {
-    super(repo);
-  }
+
+    @InjectRepository(File)
+    private fileRepository: Repository<File>,
+  ) {}
 
   async get(id: number) {
-    return this.repo.findOneBy({ id });
+    return this.fileRepository.findOneBy({ id });
   }
 
   async upload(file: Express.Multer.File) {
@@ -27,7 +26,7 @@ export class FileService extends BaseService<File> {
     newFile.size = file.size;
     newFile.url = url;
 
-    const result = await this.repo.save(newFile);
+    const result = await this.fileRepository.save(newFile);
 
     return result.id;
   }
