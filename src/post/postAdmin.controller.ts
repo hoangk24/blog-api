@@ -7,22 +7,12 @@ import {
   ParseIntPipe,
   Post,
   Query,
-  UploadedFile,
-  UseInterceptors,
-  ValidationPipe,
 } from '@nestjs/common';
-import {
-  ApiBody,
-  ApiConsumes,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FormDataRequest } from 'nestjs-form-data';
 import { CreatePostDto } from './dto/create-post.dto';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { PostAdminService } from './postAdmin.service';
-import { FormDataRequest } from 'nestjs-form-data';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('admin/post')
 @Controller('admin/post')

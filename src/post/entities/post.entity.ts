@@ -1,15 +1,8 @@
 import { BaseEntity } from '@/core/base.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
-import { Tag } from './tag.entity';
-import { ApiProperty } from '@nestjs/swagger';
 import { User } from '@/user/entities/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Tag } from './tag.entity';
 
 @Entity()
 export class Post extends BaseEntity {

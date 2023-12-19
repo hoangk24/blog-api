@@ -1,10 +1,15 @@
+import { JwtGuard } from '@/auth/guard/jwt.guard';
+import { RequestWithUser } from '@/type';
 import {
   Controller,
   DefaultValuePipe,
   Get,
   Param,
+  ParseArrayPipe,
   ParseIntPipe,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
@@ -28,5 +33,14 @@ export class PostController {
       page,
       limit,
     });
+  }
+
+  @Get('by')
+  getData(@Query('ids', new ParseArrayPipe({ items: Number })) ids: number[]) {
+    return this.postService.getPostByIds(ids);
+  }
+
+  addWishList(@Req() { user }: RequestWithUser) {
+    //noo
   }
 }
