@@ -1,8 +1,6 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+// import { ROLES_KEY, Role as UserRole } from '#/guard/role.guard';
+import { ROLES_KEY } from '@/auth/guard/role.guard';
+import { UserRole } from '@/model/user';
+import { SetMetadata } from '@nestjs/common';
 
-export const AuthUser = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
-    return request.user;
-  },
-);
+export const JWTRole = (role: UserRole) => SetMetadata(ROLES_KEY, role);

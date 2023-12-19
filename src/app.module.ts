@@ -10,18 +10,15 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { PostModule } from './post/post.module';
+import cloudinaryConfig from './config/cloudinary.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, authConfig],
+      load: [appConfig, authConfig, cloudinaryConfig],
       envFilePath: ['.env'],
     }),
-    // ServeStaticModule.forRoot({
-    //   rootPath: join(__dirname, '..', 'uploads'),
-    //   serveRoot: '/uploads',
-    // }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       async useFactory(configService: ConfigService) {

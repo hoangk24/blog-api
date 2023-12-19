@@ -15,6 +15,12 @@ export type AuthConfig = {
   refreshExpires?: string;
 };
 
+export type CloudinaryConfig = {
+  cloudName: string;
+  apiKey: string;
+  apiSecret: string;
+};
+
 export type FileConfig = {
   driver: string;
   accessKeyId?: string;

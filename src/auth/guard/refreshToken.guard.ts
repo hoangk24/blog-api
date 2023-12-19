@@ -1,4 +1,3 @@
-import { User } from '@/user/entities/user.entity';
 import {
   CanActivate,
   ExecutionContext,
@@ -9,18 +8,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'jsonwebtoken';
-// import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-// import { Logger } from 'winston';
-
-export const additionalJWTPayload = [
-  'iss',
-  'sub',
-  'aud',
-  'exp',
-  'nbf',
-  'iat',
-  'jti',
-];
+import { additionalJWTPayload } from './jwt.guard';
+import { User } from '@/user/entities/user.entity';
 
 @Injectable()
 export class JwtGuard implements CanActivate {
@@ -32,7 +21,6 @@ export class JwtGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.getTokenFromHeader(request);
-
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -42,6 +30,8 @@ export class JwtGuard implements CanActivate {
         secret: this.configService.get('JWT_SECRET'),
         issuer: this.configService.get('JWT_ISSUER'),
       });
+
+      //   this.logger.debug({ payload });
 
       if (!payload) {
         throw new UnauthorizedException();
