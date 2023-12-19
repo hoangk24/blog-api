@@ -7,11 +7,22 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { PostAdminService } from './postAdmin.service';
+import { FormDataRequest } from 'nestjs-form-data';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('admin/post')
 @Controller('admin/post')
@@ -35,6 +46,8 @@ export class PostAdminController {
   }
 
   @Post()
+  @FormDataRequest()
+  @ApiConsumes('multipart/form-data')
   async createPost(@Body() payload: CreatePostDto) {
     return this.postService.create(payload);
   }

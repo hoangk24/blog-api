@@ -57,6 +57,9 @@ export class User extends BaseEntity {
   })
   role: UserRole;
 
+  @OneToMany(() => Post, (post) => post.author)
+  posts: Post[];
+
   static removePrivateField(user: User): UserWithoutPrivateFields {
     return omit(user, 'password', 'isActive');
   }

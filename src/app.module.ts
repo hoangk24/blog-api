@@ -1,17 +1,15 @@
+import appConfig from '@/config/app.config';
+import authConfig from '@/config/auth.config';
 import { UsersModule } from '@/user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { FileSystemStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { PostModule } from './post/post.module';
-import { FileModule } from './file/file.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
-import appConfig from '@/config/app.config';
-import authConfig from '@/config/auth.config';
-import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
 
 @Module({
   imports: [
@@ -20,10 +18,10 @@ import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
       load: [appConfig, authConfig],
       envFilePath: ['.env'],
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
-      serveRoot: '/uploads',
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'uploads'),
+    //   serveRoot: '/uploads',
+    // }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       async useFactory(configService: ConfigService) {
@@ -40,8 +38,12 @@ import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
     UsersModule,
     AuthModule,
     PostModule,
-    FileModule,
-    NestjsFormDataModule.config({ storage: MemoryStoredFile }),
+    NestjsFormDataModule.config({
+      isGlobal: true,
+      autoDeleteFile: true,
+      storage: FileSystemStoredFile,
+    }),
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,7 +1,15 @@
 import { BaseEntity } from '@/core/base.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Tag } from './tag.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from '@/user/entities/user.entity';
 
 @Entity()
 export class Post extends BaseEntity {
@@ -10,8 +18,8 @@ export class Post extends BaseEntity {
   title: string;
 
   @ApiProperty()
-  @Column({ nullable: true })
-  poster: number;
+  @Column()
+  poster: string;
 
   @ApiProperty()
   @Column({
@@ -21,21 +29,26 @@ export class Post extends BaseEntity {
   content: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ nullable: true })
   thumbnail: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ nullable: true })
   shortTitle: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ nullable: true })
   published: string;
 
   @ApiProperty()
   @Column()
   slug: string;
 
-  @OneToMany(() => Tag, (tag) => tag.post)
+  @ApiProperty()
+  @ManyToMany(() => Tag)
+  @JoinTable()
   tags: Tag[];
+
+  @ManyToOne(() => User, (user) => user.posts)
+  author: User;
 }

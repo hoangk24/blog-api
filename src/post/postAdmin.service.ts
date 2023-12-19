@@ -1,4 +1,3 @@
-import { FileService } from '@/file/file.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
@@ -7,7 +6,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { Post } from './entities/post.entity';
 import { Tag } from './entities/tag.entity';
-import { ErrorHandler } from '@/core/error.service';
+import { CloudinaryService } from '@/cloudinary/cloudinary.service';
 
 @Injectable()
 export class PostAdminService {
@@ -16,7 +15,7 @@ export class PostAdminService {
     private postRepository: Repository<Post>,
     @InjectRepository(Post)
     private tagRepository: Repository<Tag>,
-    private fileService: FileService,
+    private cloudinaryService: CloudinaryService,
   ) {}
 
   async getPosts(params: IPaginationOptions) {
@@ -27,14 +26,13 @@ export class PostAdminService {
     return this.postRepository.findOneBy({ id });
   }
 
-  async create(payload: CreatePostDto) {
-    if (payload.posterId) {
-      const poster = await this.fileService.get(payload.posterId);
-      if (!poster) {
-        ErrorHandler.throwNotFoundException('poster not found');
-      }
-    }
-    return this.postRepository.save(payload);
+  async create({ poster, ...data }: CreatePostDto) {
+    const url = poster ? await this.cloudinaryService.uploadFile(poster) : null;
+
+    return this.postRepository.save({
+      ...data,
+      poster: url,
+    });
   }
 
   async createTag(payload: CreateTagDto) {
