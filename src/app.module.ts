@@ -9,8 +9,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
-import { PostModule } from './post/post.module';
 import cloudinaryConfig from './config/cloudinary.config';
+import { PostModule } from './post/post.module';
+import { MediaModule } from './media/mediaAdmin.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import cloudinaryConfig from './config/cloudinary.config';
       storage: FileSystemStoredFile,
     }),
     CloudinaryModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

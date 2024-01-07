@@ -1,5 +1,4 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { ValidationError } from './error';
 
 export class ErrorHandler {
   static throwErrorFieldException(field: string, msg: string): ValidationError {
@@ -12,5 +11,16 @@ export class ErrorHandler {
 
   static throwNotFoundException(name: string): NotFoundException {
     throw new NotFoundException(`${name} not found`);
+  }
+}
+
+class ValidationError extends BadRequestException {
+  constructor(property: string, message: string) {
+    super([
+      {
+        property,
+        message,
+      },
+    ]);
   }
 }

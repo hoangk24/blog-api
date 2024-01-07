@@ -1,4 +1,3 @@
-import { JwtGuard } from '@/auth/guard/jwt.guard';
 import { RequestWithUser } from '@/type';
 import {
   Controller,
@@ -9,7 +8,6 @@ import {
   ParseIntPipe,
   Query,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';

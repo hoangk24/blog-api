@@ -1,26 +1,42 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { RequestWithUser } from '@/type';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { CreateAuthDto } from './dto/register.dto';
+import { RegisterDto } from './dto/register.dto';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { LocalAuthGuard } from './guard/local-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiBearerAuth()
+  @Get('/me')
+  @UseGuards(JwtAuthGuard)
+  getMe(@Request() req: RequestWithUser) {
+    return this.authService.getMe(req.user.id);
+  }
+
+  @ApiBody({
+    type: LoginDto,
+  })
   @Post('/login')
-  login(@Body() payload: LoginDto) {
-    return this.authService.login(payload);
+  @UseGuards(LocalAuthGuard)
+  login(@Request() req: RequestWithUser) {
+    return this.authService.login(req.user);
   }
 
   @Post('/register')
-  register(@Body() body: CreateAuthDto) {
+  register(@Body() body: RegisterDto) {
     return this.authService.create(body);
   }
-
-  // @Get('me')
-  // getMe(@Request() req: RequestWithUser) {
-  //   return req.user;
-  // }
 }

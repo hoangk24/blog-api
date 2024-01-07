@@ -1,34 +1,42 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import {
-  IsFile,
-  MaxFileSize,
-  HasMimeType,
-  MemoryStoredFile,
-  FileSystemStoredFile,
-} from 'nestjs-form-data';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreatePostDto {
-  @ApiProperty()
+  @ApiProperty({
+    example: 'Test',
+  })
   @IsString()
   @IsNotEmpty()
   title: string;
 
-  @ApiProperty()
-  @IsOptional()
+  @ApiProperty({
+    example: 'Test',
+  })
   @IsString()
   content: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'Test',
+  })
   @IsNotEmpty()
-  slug: string;
+  shortTitle: string;
+
+  @ApiProperty({ type: 'integer', isArray: true, example: [1, 2, 3] })
+  @IsNumber({}, { each: true })
+  tags: number[];
 
   @ApiProperty({
-    type: 'string',
-    format: 'binary',
+    example: 'Test',
   })
-  @IsFile()
-  @MaxFileSize(1e6)
-  @HasMimeType(['image/jpeg', 'image/png'])
-  poster: FileSystemStoredFile;
+  @IsString()
+  thumbnail: string;
+
+  @ApiProperty({
+    example: 'Test',
+  })
+  @IsString()
+  poster: string;
+
+  @IsString()
+  slug: string;
 }
