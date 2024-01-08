@@ -17,12 +17,6 @@ module.exports = {
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
-    'import/no-duplicates': ['error'],
-    'import/no-namespace': ['error'],
-    'import/order': [
-      'error',
-      { alphabetize: { order: 'asc' }, 'newlines-between': 'never' },
-    ],
     'unused-imports/no-unused-imports': 'error',
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
