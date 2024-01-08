@@ -1,4 +1,4 @@
-import { UserWithoutPrivateFields } from './model/user';
+import { UserWithoutPrivateFields } from './models/user';
 import { User } from './user/entities/user.entity';
 
 export type RequestWithUser = Request & {

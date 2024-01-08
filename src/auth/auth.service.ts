@@ -1,4 +1,4 @@
-import { UserWithoutPrivateFields } from '@/model/user';
+import { UserWithoutPrivateFields } from '@/models/user';
 import { User } from '@/user/entities/user.entity';
 import { UsersService } from '@/user/user.service';
 import {
@@ -9,7 +9,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { ErrorHandler } from '@/core/error.service';
+import { ErrorHandler } from '@/cores/error.service';
 
 @Injectable()
 export class AuthService {
@@ -28,12 +28,12 @@ export class AuthService {
   }
 
   async validateUserCredentials({
-    username,
+    email,
     password,
   }: LoginDto): Promise<UserWithoutPrivateFields> {
     const user = await this.userService.findOne({
       where: {
-        username,
+        email,
       },
     });
 

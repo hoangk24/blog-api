@@ -1,4 +1,4 @@
-import { ErrorHandler } from '@/core/error.service';
+import { ErrorHandler } from '@/cores/error.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './entities/post.entity';
 import { TagAdminService } from './tagAdmin.service';
+import { UsersService } from '@/user/user.service';
 
 @Injectable()
 export class PostAdminService {
@@ -13,6 +14,7 @@ export class PostAdminService {
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
     private tagService: TagAdminService,
+    private userService: UsersService,
   ) {}
 
   async getPosts(params: IPaginationOptions) {
@@ -29,7 +31,7 @@ export class PostAdminService {
     return this.postRepository.findOneBy({ id });
   }
 
-  async create({ tags, ...data }: CreatePostDto) {
+  async create({ tags, ...data }: CreatePostDto, userId: number) {
     const tagList = [];
 
     tags.forEach(async (item) => {
@@ -45,6 +47,7 @@ export class PostAdminService {
     return this.postRepository.save({
       ...data,
       tags: tagList,
+      author: await this.userService.findOne({ where: { id: userId } }),
     });
   }
 }

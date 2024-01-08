@@ -1,3 +1,7 @@
+import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
+import { RolesGuard } from '@/auth/guard/role.guard';
+import { HasRoles } from '@/decorators/roles.decorators';
+import { UserRole } from '@/models/user';
 import {
   Body,
   Controller,
@@ -7,21 +11,28 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostAdminService } from './postAdmin.service';
+import { RequestWithUser } from '@/type';
 
 @ApiTags('admin/post')
 @Controller('admin/post')
 export class PostAdminController {
   constructor(private readonly postService: PostAdminService) {}
 
+  @HasRoles(UserRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
   getPostDetail(@Param(':id') id: number) {
     return this.postService.getPost(id);
   }
 
+  @HasRoles(UserRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async getPosts(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
@@ -33,8 +44,13 @@ export class PostAdminController {
     });
   }
 
+  @HasRoles(UserRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
-  async createPost(@Body() payload: CreatePostDto) {
-    return this.postService.create(payload);
+  async createPost(
+    @Body() payload: CreatePostDto,
+    @Request() req: RequestWithUser,
+  ) {
+    return this.postService.create(payload, req.user.id);
   }
 }

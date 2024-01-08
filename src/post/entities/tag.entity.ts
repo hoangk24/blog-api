@@ -1,4 +1,4 @@
-import { BaseEntity } from '@/core/base.entity';
+import { BaseEntity } from '@/cores/base.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToMany } from 'typeorm';
 import { Post } from './post.entity';

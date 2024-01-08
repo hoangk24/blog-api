@@ -1,5 +1,5 @@
-import { BaseEntity } from '@/core/base.entity';
-import { UserRole, UserWithoutPrivateFields } from '@/model/user';
+import { BaseEntity } from '@/cores/base.entity';
+import { UserRole, UserWithoutPrivateFields } from '@/models/user';
 import { Post } from '@/post/entities/post.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { compare } from 'bcrypt';

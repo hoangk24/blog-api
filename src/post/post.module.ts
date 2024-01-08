@@ -9,9 +9,14 @@ import { PostAdminController } from './postAdmin.controller';
 import { PostAdminService } from './postAdmin.service';
 import { TagAdminController } from './tagAdmin.controller';
 import { TagAdminService } from './tagAdmin.service';
+import { UsersModule } from '@/user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, Tag]), CloudinaryModule],
+  imports: [
+    TypeOrmModule.forFeature([Post, Tag]),
+    CloudinaryModule,
+    UsersModule,
+  ],
   controllers: [PostController, PostAdminController, TagAdminController],
   providers: [PostService, PostAdminService, TagAdminService],
 })

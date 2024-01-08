@@ -1,5 +1,5 @@
-import { ErrorHandler } from '@/core/error.service';
-import { UserRole } from '@/model/user';
+import { ErrorHandler } from '@/cores/error.service';
+import { UserRole } from '@/models/user';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
