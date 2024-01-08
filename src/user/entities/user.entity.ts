@@ -18,12 +18,6 @@ export class User extends BaseEntity {
   })
   email: string;
 
-  @ApiProperty()
-  @Column({
-    unique: true,
-  })
-  username: string;
-
   @Column()
   password: string;
 

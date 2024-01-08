@@ -13,31 +13,19 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  queryBuilder() {
-    return this.userRepository.createQueryBuilder('user');
-  }
-
   async findOne(options: FindOneOptions<User>) {
     return this.userRepository.findOne(options);
   }
 
   async create(payload: CreateUserDto) {
-    const { email, username } = payload;
+    const { email } = payload;
     const userExits = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.username = :username', { username })
-      .orWhere('user.email = :email', { email })
+      .where('user.email = :email', { email })
       .getOne();
+
     if (userExits) {
-      if (userExits.username === username) {
-        ErrorHandler.throwErrorFieldException(
-          'username',
-          'Username has been used.',
-        );
-      }
-      if (userExits.email === email) {
-        ErrorHandler.throwErrorFieldException('email', 'Email has been used.');
-      }
+      ErrorHandler.throwErrorFieldException('email', 'Email has been used.');
     }
     return this.userRepository.save({
       ...payload,

@@ -10,7 +10,7 @@ export class ErrorHandler {
   }
 
   static throwNotFoundException(name: string): NotFoundException {
-    throw new NotFoundException(`${name} not found`);
+    throw new NotFoundException(`${name} not found.`);
   }
 }
 

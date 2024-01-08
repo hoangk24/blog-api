@@ -7,9 +7,8 @@ import { CloudinaryService } from '@/cloudinary/cloudinary.service';
 @ApiTags('admin/media')
 @Controller('admin/media')
 export class MediaAdminController {
-  constructor(private cloudinaryService: CloudinaryService) {
-    //noop
-  }
+  constructor(private cloudinaryService: CloudinaryService) {}
+
   @Post()
   @FormDataRequest()
   @ApiConsumes('multipart/form-data')
