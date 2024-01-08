@@ -26,6 +26,4 @@ export class PostService {
       },
     });
   }
-
-  // queryBuilder() {}
 }
