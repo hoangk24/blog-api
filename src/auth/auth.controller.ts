@@ -20,7 +20,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiBearerAuth()
-  @Get('/me')
+  @Get('me')
   @UseGuards(JwtAuthGuard)
   getMe(@Request() req: RequestWithUser) {
     return this.authService.getMe(req.user.id);
@@ -29,14 +29,14 @@ export class AuthController {
   @ApiBody({
     type: LoginDto,
   })
-  @Post('/login')
+  @Post('login')
   @UseGuards(LocalAuthGuard)
   login(@Request() req: RequestWithUser) {
     return this.authService.login(req.user);
   }
 
-  @Post('/register')
+  @Post('register')
   register(@Body() body: RegisterDto) {
-    return this.authService.create(body);
+    return this.authService.register(body);
   }
 }

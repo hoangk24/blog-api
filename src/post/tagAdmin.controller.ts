@@ -8,14 +8,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { TagAdminService } from './tagAdmin.service';
 import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
 import { RolesGuard } from '@/auth/guard/role.guard';
 import { HasRoles } from '@/decorators/roles.decorators';
 import { UserRole } from '@/models/user';
-
+@ApiBearerAuth()
 @ApiTags('admin/tags')
 @Controller('admin/tags')
 export class TagAdminController {

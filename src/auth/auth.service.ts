@@ -22,7 +22,7 @@ export class AuthService {
     return this.generateJsonWebToken(user);
   }
 
-  async create(createUser: RegisterDto) {
+  async register(createUser: RegisterDto) {
     const user = await this.userService.create(createUser);
     return User.removePrivateField(user);
   }
@@ -40,6 +40,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('User not exits.');
     }
+
     if (!User.comparePassword(password, user.password)) {
       throw new UnauthorizedException('username or password is invalid.');
     }

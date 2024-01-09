@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './entities/post.entity';
 import { TagAdminService } from './tagAdmin.service';
-import { UsersService } from '@/user/user.service';
+import { User } from '@/user/entities/user.entity';
 
 @Injectable()
 export class PostAdminService {
@@ -14,7 +14,6 @@ export class PostAdminService {
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
     private tagService: TagAdminService,
-    private userService: UsersService,
   ) {}
 
   async getPosts(params: IPaginationOptions) {
@@ -31,14 +30,14 @@ export class PostAdminService {
     return this.postRepository.findOneBy({ id });
   }
 
-  async create({ tags, ...data }: CreatePostDto, userId: number) {
+  async create({ tags, ...data }: CreatePostDto, user: User) {
     const tagList = [];
 
     tags.forEach(async (item) => {
       const foundTag = await this.tagService.getTag({ where: { id: item } });
 
       if (!foundTag) {
-        ErrorHandler.throwNotFoundException(`tag ${item} not found`);
+        ErrorHandler.throwNotFoundException(`tag ${item}`);
       }
 
       tagList.push(foundTag);
@@ -47,7 +46,7 @@ export class PostAdminService {
     return this.postRepository.save({
       ...data,
       tags: tagList,
-      author: await this.userService.findOne({ where: { id: userId } }),
+      author: user,
     });
   }
 }

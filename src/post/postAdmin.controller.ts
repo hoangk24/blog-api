@@ -14,11 +14,11 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostAdminService } from './postAdmin.service';
 import { RequestWithUser } from '@/type';
-
+@ApiBearerAuth()
 @ApiTags('admin/post')
 @Controller('admin/post')
 export class PostAdminController {
@@ -51,6 +51,6 @@ export class PostAdminController {
     @Body() payload: CreatePostDto,
     @Request() req: RequestWithUser,
   ) {
-    return this.postService.create(payload, req.user.id);
+    return this.postService.create(payload, req.user);
   }
 }
