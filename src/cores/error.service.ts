@@ -1,4 +1,9 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 export class ErrorHandler {
   static throwErrorFieldException(field: string, msg: string): ValidationError {
@@ -11,6 +16,14 @@ export class ErrorHandler {
 
   static throwNotFoundException(name: string): NotFoundException {
     throw new NotFoundException(`${name} not found.`);
+  }
+
+  static throwUnauthorizedException(message?: string): ForbiddenException {
+    throw new UnauthorizedException(message);
+  }
+
+  static throwForbiddenException(message?: string): ForbiddenException {
+    throw new ForbiddenException(message);
   }
 }
 

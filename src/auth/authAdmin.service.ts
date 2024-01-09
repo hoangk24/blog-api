@@ -1,18 +1,14 @@
 import { UserWithoutPrivateFields } from '@/models/user';
 import { User } from '@/user/entities/user.entity';
 import { UsersService } from '@/user/user.service';
-import {
-  ForbiddenException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ErrorHandler } from '@/cores/error.service';
 
 @Injectable()
-export class AuthService {
+export class AuthAdminService {
   constructor(
     private jwtService: JwtService,
     private userService: UsersService,
@@ -38,14 +34,18 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('User not exits.');
+      ErrorHandler.throwUnauthorizedException('User not exits.');
     }
 
     if (!User.comparePassword(password, user.password)) {
-      throw new UnauthorizedException('username or password is invalid.');
+      ErrorHandler.throwUnauthorizedException(
+        'username or password is invalid.',
+      );
     }
 
-    if (!user.isActive) throw new ForbiddenException('user is un-activated.');
+    if (!user.isActive) {
+      ErrorHandler.throwForbiddenException('user is un-activated.');
+    }
 
     return User.removePrivateField(user);
   }

@@ -1,12 +1,13 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from '../auth.service';
+import { Injectable } from '@nestjs/common';
+import { AuthAdminService } from '../authAdmin.service';
 import { UserWithoutPrivateFields } from '@/models/user';
+import { ErrorHandler } from '@/cores/error.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthAdminService) {
     super({ usernameField: 'email' });
   }
 
@@ -20,7 +21,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     });
 
     if (!user) {
-      throw new UnauthorizedException();
+      ErrorHandler.throwNotFoundException('user');
     }
 
     return user;

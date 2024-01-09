@@ -8,16 +8,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { AuthService } from './auth.service';
+import { AuthAdminService } from './authAdmin.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 
-@ApiTags('auth')
-@Controller('auth')
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+@ApiTags('admin/auth')
+@Controller('admin/auth')
+export class AuthAdminController {
+  constructor(private readonly authService: AuthAdminService) {}
 
   @ApiBody({
     type: LoginDto,

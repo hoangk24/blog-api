@@ -7,10 +7,7 @@ import { ErrorHandler } from '@/cores/error.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    configService: ConfigService,
-    private userService: UsersService, // Giả sử bạn có một UserService để tương tác với DB
-  ) {
+  constructor(configService: ConfigService, private userService: UsersService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
