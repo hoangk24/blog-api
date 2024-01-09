@@ -1,5 +1,5 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FormDataRequest } from 'nestjs-form-data';
 import { UploadMediaDto } from './dto/uploadMedia.dto';
 import { CloudinaryService } from '@/cloudinary/cloudinary.service';
@@ -8,6 +8,7 @@ import { RolesGuard } from '@/auth/guard/role.guard';
 import { HasRoles } from '@/decorators/roles.decorators';
 import { UserRole } from '@/models/user';
 
+@ApiBearerAuth()
 @ApiTags('admin/media')
 @Controller('admin/media')
 export class MediaAdminController {
