@@ -32,4 +32,13 @@ export class UsersAdminService {
       role: UserRole.USER,
     });
   }
+
+  async deactivateUser(userId: number) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (user.role === UserRole.ADMIN) {
+      ErrorHandler.throwBadRequestException('userRole is ADMIN');
+    }
+
+    return this.userRepository.save({ ...user, isActive: !user.isActive });
+  }
 }
