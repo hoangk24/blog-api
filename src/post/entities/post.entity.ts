@@ -44,4 +44,8 @@ export class Post extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.posts)
   author: User;
+
+  @ManyToMany(() => User, (user) => user.likedPosts)
+  @JoinTable()
+  likedBy: User[];
 }

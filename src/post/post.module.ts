@@ -1,5 +1,5 @@
 import { CloudinaryModule } from '@/cloudinary/cloudinary.module';
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
 import { Tag } from './entities/tag.entity';
@@ -15,9 +15,10 @@ import { UsersModule } from '@/user/user.module';
   imports: [
     TypeOrmModule.forFeature([Post, Tag]),
     CloudinaryModule,
-    UsersModule,
+    forwardRef(() => UsersModule),
   ],
   controllers: [PostController, PostAdminController, TagAdminController],
   providers: [PostService, PostAdminService, TagAdminService],
+  exports: [PostService, PostAdminService],
 })
 export class PostModule {}

@@ -4,7 +4,7 @@ import { Post } from '@/post/entities/post.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { compare } from 'bcrypt';
 import { omit } from 'lodash';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
@@ -53,6 +53,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Post, (post) => post.author)
   posts: Post[];
+
+  @ManyToMany(() => Post, (post) => post.likedBy)
+  likedPosts: Post[];
 
   static removePrivateField(user: User): UserWithoutPrivateFields {
     return omit(user, 'password', 'isActive');

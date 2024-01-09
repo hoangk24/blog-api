@@ -19,23 +19,23 @@ import { LocalAuthGuard } from './guard/local-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @ApiBearerAuth()
-  @Get('me')
-  @UseGuards(JwtAuthGuard)
-  getMe(@Request() req: RequestWithUser) {
-    return this.authService.getMe(req.user.id);
-  }
-
   @ApiBody({
     type: LoginDto,
   })
-  @Post('login')
+  @Post('/login')
   @UseGuards(LocalAuthGuard)
   login(@Request() req: RequestWithUser) {
     return this.authService.login(req.user);
   }
 
-  @Post('register')
+  @ApiBearerAuth()
+  @Get('/me')
+  @UseGuards(JwtAuthGuard)
+  getMe(@Request() req: RequestWithUser) {
+    return this.authService.getMe(req.user.id);
+  }
+
+  @Post('/register')
   register(@Body() body: RegisterDto) {
     return this.authService.register(body);
   }

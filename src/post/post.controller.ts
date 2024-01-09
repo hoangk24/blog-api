@@ -1,4 +1,3 @@
-import { RequestWithUser } from '@/type';
 import {
   Controller,
   DefaultValuePipe,
@@ -7,7 +6,6 @@ import {
   ParseArrayPipe,
   ParseIntPipe,
   Query,
-  Req,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
@@ -36,9 +34,5 @@ export class PostController {
   @Get('by')
   getData(@Query('ids', new ParseArrayPipe({ items: Number })) ids: number[]) {
     return this.postService.getPostByIds(ids);
-  }
-
-  addWishList(@Req() { user }: RequestWithUser) {
-    //noo
   }
 }

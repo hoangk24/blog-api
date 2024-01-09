@@ -8,7 +8,16 @@ import { UsersService } from './user.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  async create(@Body() createUserDto: CreateUserDto) {
+  async register(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Post('like-post')
+  // async likePost(
+  //   @Request() req: RequestWithUser,
+  //   @Body() payload: LikePostDto,
+  // ) {
+  //   return this.usersService.likePost(payload, req.user);
+  // }
 }
