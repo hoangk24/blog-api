@@ -29,10 +29,6 @@ export class User extends BaseEntity {
 
   @ApiProperty()
   @Column({ nullable: true })
-  banner?: string;
-
-  @ApiProperty()
-  @Column({ nullable: true })
   avatar?: string;
 
   @ApiProperty()

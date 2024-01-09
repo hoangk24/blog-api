@@ -5,8 +5,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 //Default
-import { AppService } from '@/app.service';
-import { AppController } from '@/app.controller';
 
 //Configs
 import appConfig from '@/configs/app.config';
@@ -51,7 +49,7 @@ import { MediaModule } from '@/media/mediaAdmin.module';
     CloudinaryModule,
     MediaModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  // controllers: [AppController],
+  // providers: [AppService],
 })
 export class AppModule {}

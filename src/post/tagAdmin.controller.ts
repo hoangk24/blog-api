@@ -6,23 +6,19 @@ import {
   ParseIntPipe,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { TagAdminService } from './tagAdmin.service';
-import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
-import { RolesGuard } from '@/auth/guard/role.guard';
-import { HasRoles } from '@/decorators/roles.decorators';
-import { UserRole } from '@/models/user';
+import { AdminGuard } from '@/decorators/roles.decorators';
+
 @ApiBearerAuth()
 @ApiTags('admin/tags')
 @Controller('admin/tags')
 export class TagAdminController {
   constructor(private readonly tagService: TagAdminService) {}
 
-  @HasRoles(UserRole.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @AdminGuard()
   @Get()
   async getTags(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
@@ -31,15 +27,13 @@ export class TagAdminController {
     return this.tagService.getTags({ page, limit });
   }
 
-  @HasRoles(UserRole.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @AdminGuard()
   @Get('list')
   async getTagsList() {
     return this.tagService.getTagList();
   }
 
-  @HasRoles(UserRole.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @AdminGuard()
   @Post()
   async createTag(@Body() payload: CreateTagDto) {
     return this.tagService.createTag(payload);

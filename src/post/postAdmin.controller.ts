@@ -1,7 +1,5 @@
-import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
-import { RolesGuard } from '@/auth/guard/role.guard';
-import { HasRoles } from '@/decorators/roles.decorators';
-import { UserRole } from '@/models/user';
+import { AdminGuard } from '@/decorators/roles.decorators';
+import { RequestWithUser } from '@/type';
 import {
   Body,
   Controller,
@@ -10,29 +8,27 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
   Query,
   Request,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { PostAdminService } from './postAdmin.service';
-import { RequestWithUser } from '@/type';
 @ApiBearerAuth()
 @ApiTags('admin/post')
 @Controller('admin/post')
 export class PostAdminController {
   constructor(private readonly postService: PostAdminService) {}
 
-  @HasRoles(UserRole.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @AdminGuard()
   @Get(':id')
-  getPostDetail(@Param(':id') id: number) {
+  getPostDetail(@Param('id') id: number) {
     return this.postService.getPost(id);
   }
 
-  @HasRoles(UserRole.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @AdminGuard()
   @Get()
   async getPosts(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
@@ -44,8 +40,13 @@ export class PostAdminController {
     });
   }
 
-  @HasRoles(UserRole.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @AdminGuard()
+  @Put(':id')
+  async updatePost(@Param('id') id: number, @Body() payload: UpdatePostDto) {
+    return this.postService.update(id, payload);
+  }
+
+  @AdminGuard()
   @Post()
   async createPost(
     @Body() payload: CreatePostDto,

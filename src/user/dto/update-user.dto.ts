@@ -1,19 +1,8 @@
-import { IsOptional, IsString } from 'class-validator';
+import { UserRole } from '@/models/user';
+import { IsEnum, IsOptional } from 'class-validator';
 
 export class UpdateUserDto {
   @IsOptional()
-  @IsString()
-  description?: string;
-
-  @IsOptional()
-  @IsString()
-  fullName?: string;
-
-  @IsOptional()
-  @IsString()
-  avatar?: string;
-
-  @IsOptional()
-  @IsString()
-  address?: string;
+  @IsEnum(UserRole)
+  role: UserRole;
 }

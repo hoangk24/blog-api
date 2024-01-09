@@ -1,25 +1,56 @@
 import { ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersAdminService } from './userAdmin.service';
-import { HasRoles } from '@/decorators/roles.decorators';
-import { UserRole } from '@/models/user';
-import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
-import { RolesGuard } from '@/auth/guard/role.guard';
+import { AdminGuard } from '@/decorators/roles.decorators';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('admin/users')
 @Controller('admin/users')
 export class UsersAdminController {
   constructor(private readonly usersAdminService: UsersAdminService) {}
 
+  @AdminGuard()
+  @Get()
+  async getUsers(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+  ) {
+    return this.usersAdminService.getUsers({ page, limit });
+  }
+
+  @AdminGuard()
+  @Get(':id')
+  async getUser(@Param('id') id: number) {
+    return this.usersAdminService.getUser(id);
+  }
+
+  @AdminGuard()
   async create(@Body() createUserDto: CreateUserDto) {
     return this.usersAdminService.create(createUserDto);
   }
 
-  @HasRoles(UserRole.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @AdminGuard()
   @Post('deactivate')
   async deactivateUser(userId: number) {
     return this.usersAdminService.deactivateUser(userId);
+  }
+
+  @AdminGuard()
+  @Post(':id')
+  async updateUser(
+    @Param('id') userId: number,
+    @Body() payload: UpdateUserDto,
+  ) {
+    return this.usersAdminService.update(userId, payload);
   }
 }

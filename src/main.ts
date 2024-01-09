@@ -25,7 +25,10 @@ async function bootstrap() {
     }),
   );
 
-  const config = new DocumentBuilder().setVersion('1.0').build();
+  const config = new DocumentBuilder()
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   const port = process.env.APP_PORT ?? process.env.PORT ?? 3000;
