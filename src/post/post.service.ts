@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import { FindOneOptions, In, Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
+import { ErrorHandler } from '@/cores/error.service';
 
 @Injectable()
 export class PostService {
@@ -15,11 +16,21 @@ export class PostService {
     return this.postRepository.findOne(options);
   }
   async getPosts(params: IPaginationOptions) {
-    return paginate(this.postRepository.createQueryBuilder(), params);
+    const queryBuilder = await this.postRepository
+      .createQueryBuilder('post')
+      .where('post.deletedAt IS NULL')
+      .leftJoinAndSelect('post.tags', 'tags');
+
+    return paginate(queryBuilder, params);
   }
 
-  async getPost(id: number) {
-    return this.postRepository.findOneBy({ id });
+  async getPost(slug: string) {
+    const post = await this.postRepository.findOneBy({ slug });
+    if (!post) {
+      ErrorHandler.throwNotFoundException(`post ${slug}`);
+    }
+
+    return post;
   }
 
   async getPostByIds(ids: number[]) {

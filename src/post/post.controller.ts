@@ -15,9 +15,9 @@ import { PostService } from './post.service';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Get(':id')
-  getPostDetail(@Param(':id') id: number) {
-    return this.postService.getPost(id);
+  @Get(':slug')
+  getPostDetail(@Param(':slug') slug: string) {
+    return this.postService.getPost(slug);
   }
 
   @Get()
