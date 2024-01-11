@@ -11,8 +11,8 @@ export class Post extends BaseEntity {
   title: string;
 
   @ApiProperty()
-  @Column()
-  poster: string;
+  @Column({ nullable: true })
+  poster?: string;
 
   @ApiProperty()
   @Column({
@@ -20,14 +20,6 @@ export class Post extends BaseEntity {
     nullable: true,
   })
   content: string;
-
-  @ApiProperty()
-  @Column({ nullable: true })
-  thumbnail: string;
-
-  @ApiProperty()
-  @Column({ nullable: true })
-  shortTitle: string;
 
   @ApiProperty()
   @Column({ nullable: true })

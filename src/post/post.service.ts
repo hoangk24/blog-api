@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
-import { FindOneOptions, In, Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { ErrorHandler } from '@/cores/error.service';
 
@@ -25,7 +25,13 @@ export class PostService {
   }
 
   async getPost(slug: string) {
-    const post = await this.postRepository.findOneBy({ slug });
+    const post = await this.postRepository
+      .createQueryBuilder('post')
+      .where('post.slug:=slug', { slug })
+      .andWhere('post.published IS NOT NULL')
+      .andWhere('post.deletedAt IS NULL')
+      .getOne();
+
     if (!post) {
       ErrorHandler.throwNotFoundException(`post ${slug}`);
     }
@@ -34,10 +40,11 @@ export class PostService {
   }
 
   async getPostByIds(ids: number[]) {
-    return this.postRepository.find({
-      where: {
-        id: In(ids),
-      },
-    });
+    return await this.postRepository
+      .createQueryBuilder('post')
+      .where('post.id IN (:ids)', { ids })
+      .andWhere('post.published IS NOT NULL')
+      .andWhere('post.deletedAt IS NULL')
+      .getMany();
   }
 }

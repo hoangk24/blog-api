@@ -52,7 +52,7 @@ export class UsersService {
     if (isUserLikedPost) {
       return this.userRepository.save({
         ...user,
-        likedPosts: user.likedPosts.filter((item) => item.id === post.id),
+        likedPosts: user.likedPosts.filter((item) => item.id !== post.id),
       });
     }
 

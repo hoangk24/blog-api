@@ -21,6 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       ErrorHandler.throwNotFoundException('user');
     }
+
     return user;
   }
 }
