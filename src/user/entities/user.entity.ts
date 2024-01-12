@@ -18,12 +18,13 @@ export class User extends BaseEntity {
   })
   email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @ApiProperty()
   @Column({
     default: true,
+    select: false,
   })
   isActive: boolean;
 
@@ -44,6 +45,7 @@ export class User extends BaseEntity {
     type: 'enum',
     enum: UserRole,
     default: UserRole.USER,
+    select: false,
   })
   role: UserRole;
 

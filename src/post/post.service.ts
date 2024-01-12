@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { ErrorHandler } from '@/cores/error.service';
 
@@ -12,39 +12,51 @@ export class PostService {
     private postRepository: Repository<Post>,
   ) {}
 
+  //Shared function
   async findPost(options: FindOneOptions<Post>) {
     return this.postRepository.findOne(options);
   }
-  async getPosts(params: IPaginationOptions) {
-    const queryBuilder = await this.postRepository
-      .createQueryBuilder('post')
-      .where('post.deletedAt IS NULL')
-      .leftJoinAndSelect('post.tags', 'tags');
 
-    return paginate(queryBuilder, params);
+  queryBuilder(alias: string) {
+    return this.postRepository
+      .createQueryBuilder(alias)
+      .leftJoinAndSelect(`${alias}.tags`, 'tags')
+      .leftJoinAndSelect(`${alias}.author`, 'author')
+      .where(`${alias}.published IS NOT NULL`)
+      .andWhere(`${alias}.deletedAt IS NULL`);
   }
 
-  async getPost(slug: string) {
-    const post = await this.postRepository
-      .createQueryBuilder('post')
-      .where('post.slug:=slug', { slug })
-      .andWhere('post.published IS NOT NULL')
-      .andWhere('post.deletedAt IS NULL')
-      .getOne();
+  //========Filter function============
+
+  async getPosts(params: IPaginationOptions) {
+    return paginate(this.queryBuilder('post'), params);
+  }
+
+  async getPostBySlugOrId(slugOrId: string) {
+    const post = await this.queryBuilder('post')
+      .where('id=:id', { slugOrId })
+      .orWhere('id=:id', { slugOrId });
 
     if (!post) {
-      ErrorHandler.throwNotFoundException(`post ${slug}`);
+      ErrorHandler.throwNotFoundException(`post`);
+    }
+
+    return post;
+  }
+
+  async filterPost(filter: FindOptionsWhere<Post>[]) {
+    const post = await this.postRepository.findBy(filter);
+
+    if (!post) {
+      ErrorHandler.throwNotFoundException(`post`);
     }
 
     return post;
   }
 
   async getPostByIds(ids: number[]) {
-    return await this.postRepository
-      .createQueryBuilder('post')
-      .where('post.id IN (:ids)', { ids })
-      .andWhere('post.published IS NOT NULL')
-      .andWhere('post.deletedAt IS NULL')
+    return await this.queryBuilder('post')
+      .andWhere('post.id IN (:ids)', { ids })
       .getMany();
   }
 }

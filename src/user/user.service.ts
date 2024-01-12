@@ -20,10 +20,17 @@ export class UsersService {
     return this.userRepository.findOne(options);
   }
 
+  queryBuilder(alias: string) {
+    return this.userRepository
+      .createQueryBuilder(alias)
+      .select(
+        'fullName email password isActive avatar description address role',
+      );
+  }
+
   async create(payload: CreateUserDto) {
     const { email } = payload;
-    const userExits = await this.userRepository
-      .createQueryBuilder('user')
+    const userExits = await this.queryBuilder('user')
       .where('user.email = :email', { email })
       .getOne();
 
@@ -37,14 +44,15 @@ export class UsersService {
   }
 
   async likePost(payload: LikePostDto, user: User) {
-    const post = await this.postService.findPost({
-      where: {
-        id: payload.postId,
-      },
-    });
+    const post = await this.postService
+      .queryBuilder('post')
+      .where('post.id:=postId', { postId: payload.postId })
+      .getOne();
+
     if (!post) {
       ErrorHandler.throwNotFoundException(`post ${payload.postId}`);
     }
+
     const isUserLikedPost = user.likedPosts
       .map((item) => item.id)
       .includes(post.id);
