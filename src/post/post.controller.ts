@@ -2,30 +2,59 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
-  ParseArrayPipe,
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
-import { FindOptionsWhere } from 'typeorm';
+import { FindOptionsWhere, In } from 'typeorm';
 import { Post } from './entities/post.entity';
 
-@ApiTags('post')
-@Controller('post')
+@ApiTags('posts')
+@Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Get('idList')
-  getData(@Query('ids', new ParseArrayPipe({ items: Number })) ids: number[]) {
-    return this.postService.getPostByIds(ids);
+  @Get('latest')
+  getLatestPost() {
+    return this.postService.getLatestPost();
+  }
+
+  @Get('detail')
+  getPostDetail(
+    @Query('id') id?: number,
+    @Query('slug')
+    slug?: string,
+  ) {
+    return this.postService.getPostDetail({
+      slug,
+      id,
+    });
   }
 
   @Get('filter')
-  getPostsBy(@Query('id') id?: number, @Query('slug') slug?: string) {
-    const filter = [id, slug].filter(
-      (item) => item != null,
-    ) as FindOptionsWhere<Post>[];
+  getPostsBy(
+    @Query('id') id?: number,
+    @Query('slug') slug?: string,
+    @Query('ids') ids?: string,
+  ) {
+    const filter: FindOptionsWhere<Post>[] = [];
+
+    if (id) {
+      filter.push({ id });
+    }
+
+    if (slug) {
+      filter.push({ slug });
+    }
+
+    if (ids) {
+      const idList = ids.split(',');
+
+      filter.push({
+        id: In(idList),
+      });
+    }
 
     return this.postService.filterPost(filter);
   }

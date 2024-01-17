@@ -1,16 +1,8 @@
 import { RequestWithUser } from '@/type';
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuthAdminService } from './authAdmin.service';
 import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 
@@ -35,8 +27,8 @@ export class AuthAdminController {
     return this.authService.getMe(req.user.id);
   }
 
-  @Post('/register')
-  register(@Body() body: RegisterDto) {
-    return this.authService.register(body);
-  }
+  // @Post('/register')
+  // register(@Body() body: RegisterDto) {
+  //   return this.authService.register(body);
+  // }
 }

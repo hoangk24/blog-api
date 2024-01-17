@@ -4,8 +4,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-//Default
-
 //Configs
 import appConfig from '@/configs/app.config';
 import authConfig from '@/configs/auth.config';
@@ -49,7 +47,5 @@ import { MediaModule } from '@/media/mediaAdmin.module';
     CloudinaryModule,
     MediaModule,
   ],
-  // controllers: [AppController],
-  // providers: [AppService],
 })
 export class AppModule {}

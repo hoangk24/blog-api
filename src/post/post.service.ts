@@ -14,7 +14,10 @@ export class PostService {
 
   //Shared function
   async findPost(options: FindOneOptions<Post>) {
-    return this.postRepository.findOne(options);
+    return this.postRepository.findOne({
+      ...options,
+      // relations: ['author', 'tag'],
+    });
   }
 
   queryBuilder(alias: string) {
@@ -28,20 +31,41 @@ export class PostService {
 
   //========Filter function============
 
-  async getPosts(params: IPaginationOptions) {
-    return paginate(this.queryBuilder('post'), params);
-  }
+  async getPostDetail({ id, slug }: { slug?: string; id?: number }) {
+    let post: Post;
+    if (id) {
+      post = await this.findPost({
+        where: {
+          id,
+        },
+      });
+    }
 
-  async getPostBySlugOrId(slugOrId: string) {
-    const post = await this.queryBuilder('post')
-      .where('id=:id', { slugOrId })
-      .orWhere('id=:id', { slugOrId });
+    if (slug) {
+      post = await this.findPost({
+        where: {
+          id,
+        },
+      });
+    }
 
     if (!post) {
-      ErrorHandler.throwNotFoundException(`post`);
+      ErrorHandler.throwNotFoundException('post');
     }
 
     return post;
+  }
+
+  async getPosts(params: IPaginationOptions) {
+    return paginate(
+      this.postRepository
+        .createQueryBuilder('post')
+        .leftJoinAndSelect(`post.tags`, 'tags')
+        .leftJoinAndSelect(`post.author`, 'author')
+        .where(`post.deletedAt IS NULL`)
+        .andWhere(`post.published IS NOT NULL`),
+      params,
+    );
   }
 
   async filterPost(filter: FindOptionsWhere<Post>[]) {
@@ -54,9 +78,10 @@ export class PostService {
     return post;
   }
 
-  async getPostByIds(ids: number[]) {
-    return await this.queryBuilder('post')
-      .andWhere('post.id IN (:ids)', { ids })
-      .getMany();
+  async getLatestPost() {
+    return await this.postRepository
+      .createQueryBuilder('post')
+      .orderBy('post.createdAt', 'DESC')
+      .getOne();
   }
 }

@@ -1,10 +1,9 @@
-import { UserWithoutPrivateFields } from '@/models/user';
+import { UserRole, UserWithoutPrivateFields } from '@/models/user';
 import { User } from '@/user/entities/user.entity';
 import { UsersService } from '@/user/user.service';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
 import { ErrorHandler } from '@/cores/error.service';
 
 @Injectable()
@@ -18,10 +17,10 @@ export class AuthAdminService {
     return this.generateJsonWebToken(user);
   }
 
-  async register(createUser: RegisterDto) {
-    const user = await this.userService.create(createUser);
-    return User.removePrivateField(user);
-  }
+  // async register(createUser: RegisterDto) {
+  //   const user = await this.userService.create(createUser);
+  //   return User.removePrivateField(user);
+  // }
 
   async validateUserCredentials({
     email,
@@ -38,13 +37,15 @@ export class AuthAdminService {
     }
 
     if (!User.comparePassword(password, user.password)) {
-      ErrorHandler.throwUnauthorizedException(
-        'username or password is invalid.',
-      );
+      ErrorHandler.throwUnauthorizedException('Email or password is invalid.');
     }
 
     if (!user.isActive) {
       ErrorHandler.throwForbiddenException('user is un-activated.');
+    }
+
+    if (user.role === UserRole.USER) {
+      ErrorHandler.throwForbiddenException();
     }
 
     return User.removePrivateField(user);
@@ -58,9 +59,11 @@ export class AuthAdminService {
 
   async getMe(userId: number) {
     const user = await this.userService.findOne({ where: { id: userId } });
+
     if (!user) {
       ErrorHandler.throwNotFoundException('user not found.');
     }
+
     return User.removePrivateField(user);
   }
 }

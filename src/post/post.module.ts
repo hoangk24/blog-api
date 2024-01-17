@@ -10,7 +10,7 @@ import { TagAdminController } from './tagAdmin.controller';
 import { TagAdminService } from './tagAdmin.service';
 import { UsersModule } from '@/user/user.module';
 import { PostController } from './post.controller';
-import { TagController } from './tag.container';
+import { TagController } from './tag.controller';
 import { TagService } from './tag.service';
 
 @Module({
