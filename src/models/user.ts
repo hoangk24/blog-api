@@ -1,4 +1,4 @@
-import { User } from '@/user/entities/user.entity';
+import { User } from '@/modules/user/entities/user.entity';
 
 export type UserWithoutPrivateFields = Omit<User, 'password' | 'isActive'>;
 

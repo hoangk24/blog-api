@@ -1,13 +1,13 @@
 import { UserRole, UserWithoutPrivateFields } from '@/models/user';
-import { User } from '@/user/entities/user.entity';
-import { UsersService } from '@/user/user.service';
+import { User } from '@/modules/user/entities/user.entity';
+import { UsersService } from '@/modules/user/user.service';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { ErrorHandler } from '@/cores/error.service';
 
 @Injectable()
-export class AuthAdminService {
+export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UsersService,
@@ -16,11 +16,6 @@ export class AuthAdminService {
   async login(user: User) {
     return this.generateJsonWebToken(user);
   }
-
-  // async register(createUser: RegisterDto) {
-  //   const user = await this.userService.create(createUser);
-  //   return User.removePrivateField(user);
-  // }
 
   async validateUserCredentials({
     email,
@@ -41,7 +36,7 @@ export class AuthAdminService {
     }
 
     if (!user.isActive) {
-      ErrorHandler.throwForbiddenException('user is un-activated.');
+      ErrorHandler.throwForbiddenException('User is un-activated.');
     }
 
     if (user.role === UserRole.USER) {

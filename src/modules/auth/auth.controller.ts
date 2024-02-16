@@ -1,15 +1,15 @@
-import { RequestWithUser } from '@/type';
+import { RequestWithUser } from '@/@types/user';
 import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { AuthAdminService } from './authAdmin.service';
+import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { LocalAuthGuard } from './guard/local-auth.guard';
+import { LocalAuthGuard } from '@/guards/local-auth.guard';
 import { AdminGuard } from '@/decorators/roles.decorators';
 
-@ApiTags('admin/auth')
-@Controller('admin/auth')
-export class AuthAdminController {
-  constructor(private readonly authService: AuthAdminService) {}
+@ApiTags('auth')
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
 
   @ApiBody({
     type: LoginDto,
@@ -26,9 +26,4 @@ export class AuthAdminController {
   getMe(@Request() req: RequestWithUser) {
     return this.authService.getMe(req.user.id);
   }
-
-  // @Post('/register')
-  // register(@Body() body: RegisterDto) {
-  //   return this.authService.register(body);
-  // }
 }

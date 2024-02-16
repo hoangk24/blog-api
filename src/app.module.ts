@@ -10,11 +10,10 @@ import authConfig from '@/configs/auth.config';
 import cloudinaryConfig from '@/configs/cloudinary.config';
 
 //Modules
-import { UsersModule } from '@/user/user.module';
-import { CloudinaryModule } from '@/cloudinary/cloudinary.module';
-import { AuthModule } from '@/auth/auth.module';
-import { PostModule } from '@/post/post.module';
-import { MediaModule } from '@/media/mediaAdmin.module';
+import { UsersModule } from '@/modules/user/user.module';
+import { CloudinaryModule } from '@/modules/cloudinary/cloudinary.module';
+import { AuthModule } from '@/modules/auth/auth.module';
+import { MediaModule } from '@/modules/media/mediaAdmin.module';
 
 @Module({
   imports: [
@@ -43,7 +42,6 @@ import { MediaModule } from '@/media/mediaAdmin.module';
     }),
     UsersModule,
     AuthModule,
-    PostModule,
     CloudinaryModule,
     MediaModule,
   ],

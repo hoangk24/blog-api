@@ -1,7 +1,7 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { AuthAdminService } from '../authAdmin.service';
+import { AuthAdminService } from '../modules/auth/auth.service';
 import { UserWithoutPrivateFields } from '@/models/user';
 import { ErrorHandler } from '@/cores/error.service';
 
