@@ -14,6 +14,7 @@ import { UsersModule } from '@/modules/user/user.module';
 import { CloudinaryModule } from '@/modules/cloudinary/cloudinary.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { MediaModule } from '@/modules/media/mediaAdmin.module';
+import { PostModule } from '@/modules/post/post.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { MediaModule } from '@/modules/media/mediaAdmin.module';
     AuthModule,
     CloudinaryModule,
     MediaModule,
+    PostModule,
   ],
 })
 export class AppModule {}
