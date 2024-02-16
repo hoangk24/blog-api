@@ -1,12 +1,27 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateCommentDto {
+export class CreateReplyDto {
+  @IsString()
   @IsEmail()
-  @ApiProperty()
   email: string;
 
   @IsString()
-  @ApiProperty()
+  content: string;
+
+  @IsOptional()
+  @IsNumber()
+  parentId: number;
+}
+
+export class CreateCommentDto {
+  @IsNumber()
+  @IsNumber()
+  postId?: number;
+
+  @IsString()
+  @IsEmail()
+  email: string;
+
+  @IsString()
   content: string;
 }

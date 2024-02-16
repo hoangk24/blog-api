@@ -8,10 +8,12 @@ import { TagController } from './tag.controller';
 import { TagService } from './tag.service';
 import { Tag } from './entities/tag.entity';
 import { Comment } from './entities/comment.entity';
+import { CommentController } from './comment.controller';
+import { CommentService } from './comment.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, Tag, Comment]), UsersModule],
-  controllers: [PostController, TagController],
-  providers: [PostService, TagService],
+  controllers: [PostController, TagController, CommentController],
+  providers: [PostService, TagService, CommentService],
 })
 export class PostModule {}
