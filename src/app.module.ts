@@ -1,27 +1,27 @@
-import { UsersModule } from '@/user/user.module';
-import { Module } from '@nestjs/common';
+//Library
+import { FileSystemStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { PostModule } from './post/post.module';
-import { FileModule } from './file/file.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
-import appConfig from '@/config/app.config';
-import authConfig from '@/config/auth.config';
+
+//Configs
+import appConfig from '@/configs/app.config';
+import authConfig from '@/configs/auth.config';
+import cloudinaryConfig from '@/configs/cloudinary.config';
+
+//Modules
+import { UsersModule } from '@/modules/user/user.module';
+import { CloudinaryModule } from '@/modules/cloudinary/cloudinary.module';
+import { AuthModule } from '@/modules/auth/auth.module';
+import { MediaModule } from '@/modules/media/mediaAdmin.module';
+import { PostModule } from '@/modules/post/post.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, authConfig],
-      envFilePath: ['.env.development'],
-    }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
-      serveRoot: '/uploads',
+      load: [appConfig, authConfig, cloudinaryConfig],
+      envFilePath: ['.env'],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -34,15 +34,18 @@ import authConfig from '@/config/auth.config';
           autoLoadEntities: true,
         };
       },
-
       inject: [ConfigService],
+    }),
+    NestjsFormDataModule.config({
+      isGlobal: true,
+      autoDeleteFile: true,
+      storage: FileSystemStoredFile,
     }),
     UsersModule,
     AuthModule,
+    CloudinaryModule,
+    MediaModule,
     PostModule,
-    FileModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
