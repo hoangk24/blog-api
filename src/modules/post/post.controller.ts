@@ -13,8 +13,9 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AdminGuard } from '@/decorators/roles.decorators';
 import { RequestWithUser } from '@/@types/user';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('post')
 @ApiBearerAuth()
 @Controller('post')
 export class PostController {

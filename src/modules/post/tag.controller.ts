@@ -10,9 +10,10 @@ import {
 } from '@nestjs/common';
 import { TagService } from './tag.service';
 import { AdminGuard } from '@/decorators/roles.decorators';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateTagDto } from './dto/create-tag.dto';
 
+@ApiTags('tag')
 @ApiBearerAuth()
 @Controller('tag')
 export class TagController {

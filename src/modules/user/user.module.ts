@@ -5,14 +5,12 @@ import { User } from './entities/user.entity';
 import { UserSubscriber } from './user.subscriber';
 import { UsersAdminService } from './userAdmin.service';
 import { UsersAdminController } from './userAdmin.controller';
+import { UsersController } from './user.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    // forwardRef(() => PostModule)
-  ],
-  controllers: [UsersAdminController],
-  providers: [UsersService, UserSubscriber, UsersAdminService],
+  imports: [TypeOrmModule.forFeature([User])],
+  controllers: [UsersAdminController, UsersController],
+  providers: [UsersService, UsersAdminService, UserSubscriber],
   exports: [UsersService, UsersAdminService],
 })
 export class UsersModule {}

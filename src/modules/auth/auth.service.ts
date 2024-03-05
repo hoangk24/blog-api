@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { ErrorHandler } from '@/cores/error.service';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,11 @@ export class AuthService {
 
   async login(user: User) {
     return this.generateJsonWebToken(user);
+  }
+
+  async register(createUser: RegisterDto) {
+    const user = await this.userService.createUser(createUser);
+    return User.removePrivateField(user);
   }
 
   async validateUserCredentials({
