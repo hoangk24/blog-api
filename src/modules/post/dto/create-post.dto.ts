@@ -5,15 +5,16 @@ export class CreatePostDto {
   @IsOptional()
   @IsString()
   @ApiProperty()
-  banner: string;
+  banner?: string;
 
   @IsString()
   @ApiProperty()
   title: string;
 
+  @IsOptional()
   @IsString()
   @ApiProperty()
-  published: string;
+  published?: string;
 
   @IsString()
   @ApiProperty()

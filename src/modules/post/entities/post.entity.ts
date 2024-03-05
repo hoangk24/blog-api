@@ -27,7 +27,9 @@ export class Post extends BaseEntity {
   published: string;
 
   @ApiProperty()
-  @Column()
+  @Column({
+    type: 'longtext',
+  })
   content: string;
 
   @ManyToOne(() => User, (user) => user.posts)
