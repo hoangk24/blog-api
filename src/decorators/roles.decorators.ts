@@ -5,7 +5,7 @@ import { SetMetadata, UseGuards, applyDecorators } from '@nestjs/common';
 
 const HasRoles = (role: UserRole) => SetMetadata('role', role);
 
-//For admin
+//For admin user
 export const AdminGuard = () =>
   applyDecorators(
     HasRoles(UserRole.ADMIN),
